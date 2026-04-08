@@ -32,14 +32,18 @@ async function load() {
 }
 
 async function add() {
+  const name = document.getElementById('name').value;
+  const price = document.getElementById('price').value;
+  const stock = document.getElementById('stock').value;
+
   await fetch('/products', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       id: Date.now(),
-      name: name.value,
-      price: Number(price.value),
-      stock: Number(stock.value),
+      name: name,
+      price: Number(price),
+      stock: Number(stock),
       description: ""
     })
   });
@@ -48,12 +52,22 @@ async function add() {
 }
 
 async function update(id) {
-  const stock = prompt("New stock:");
+  const res = await fetch('/products');
+  const data = await res.json();
+  const p = data.find(x => x.id == id);
+
+  const name = prompt("Name:", p.name);
+  const price = prompt("Price:", p.price);
+  const stock = prompt("Stock:", p.stock);
 
   await fetch('/products/' + id, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ stock: Number(stock) })
+    body: JSON.stringify({
+      name,
+      price: Number(price),
+      stock: Number(stock)
+    })
   });
 
   load();
