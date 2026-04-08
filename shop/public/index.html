@@ -7,12 +7,12 @@
 <style>
 body {
   font-family: Arial;
-  background: #f5f6fa;
+  background: lightgray;
   padding: 30px;
 }
 
 h1 {
-  color: #2f3640;
+  color: black;
 }
 
 .controls {
@@ -22,14 +22,14 @@ h1 {
 button {
   padding: 8px 12px;
   margin-right: 10px;
-  background: #40739e;
+  background: blue;
   color: white;
   border: none;
   cursor: pointer;
 }
 
 button:hover {
-  background: #273c75;
+  background: darkblue;
 }
 
 .grid {
@@ -42,13 +42,24 @@ button:hover {
   background: white;
   padding: 15px;
   width: 220px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px gray;
 }
 
 .price {
   font-weight: bold;
-  color: #44bd32;
+  color: green;
 }
+
+.stock {
+  margin-top: 5px;
+}
+
+.small-btn {
+  padding: 4px 8px;
+  margin-right: 5px;
+  background: gray;
+}
+
 </style>
 </head>
 
@@ -79,33 +90,74 @@ async function load() {
       <h3>${p.name}</h3>
       <p>${p.description || ""}</p>
       <p class="price">${p.price} €</p>
-      <p>Stock: ${p.stock}</p>
-      <button onclick="updateStock(${p.id})">Update stock</button>
+
+      <div class="stock">
+        Stock: ${p.stock}
+      </div>
+
+      <button class="small-btn" onclick="minus(${p.id})">-1</button>
+      <button class="small-btn" onclick="plus(${p.id})">+1</button>
+
+      <br><br>
+
+      <button onclick="updateStock(${p.id})">Sync warehouse</button>
     `;
 
     list.appendChild(div);
   });
 }
 
+async function plus(id) {
+  const res = await fetch('/products');
+  const data = await res.json();
+
+  const product = data.find(p => p.id == id);
+  product.stock++;
+
+  await save(data);
+  load();
+}
+
+async function minus(id) {
+  const res = await fetch('/products');
+  const data = await res.json();
+
+  const product = data.find(p => p.id == id);
+  product.stock--;
+
+  await save(data);
+  load();
+}
+
+async function save(data) {
+  await fetch('/products', {
+    method: 'DELETE'
+  });
+
+  for (const p of data) {
+    await fetch('/import-products', {
+      method: 'GET'
+    });
+  }
+}
+
 async function importProducts() {
   await fetch('/import-products');
-  alert("Imported!");
   load();
 }
 
 async function deleteAll() {
   await fetch('/products', { method: 'DELETE' });
-  alert("Deleted!");
   load();
 }
 
 async function updateStock(id) {
   await fetch(`/update-stock/${id}`);
-  alert("Updated!");
   load();
 }
 
 load();
+
 </script>
 
 </body>
