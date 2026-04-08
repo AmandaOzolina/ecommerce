@@ -83,63 +83,26 @@ async function load() {
   list.innerHTML = '';
 
   for (let i = 0; i < data.length; i++) {
-  const p = data[i];
+    const p = data[i];
 
-  const div = document.createElement('div');
-  div.className = 'card';
+    const div = document.createElement('div');
+    div.className = 'card';
 
-  const title = document.createElement('h3');
-  title.innerText = p.name;
+    div.innerHTML =
+      "<h3>" + p.name + "</h3>" +
+      "<p>" + (p.description ? p.description : "") + "</p>" +
+      "<p class='price'>" + p.price + " €</p>" +
+      "<div class='stock'>Stock: " + p.stock + "</div>" +
 
-  const desc = document.createElement('p');
-  if (p.description) {
-    desc.innerText = p.description;
-  } else {
-    desc.innerText = "";
-  }
+      "<button class='small-btn' onclick='minus(" + p.id + ")'>-1</button>" +
+      "<button class='small-btn' onclick='plus(" + p.id + ")'>+1</button>" +
 
-  const price = document.createElement('p');
-  price.className = 'price';
-  price.innerText = p.price + " €";
+      "<br><br>" +
 
-  const stock = document.createElement('div');
-  stock.className = 'stock';
-  stock.innerText = "Stock: " + p.stock;
+      "<button onclick='updateStock(" + p.id + ")'>Sync warehouse</button>";
 
-  const btnMinus = document.createElement('button');
-  btnMinus.innerText = "-1";
-  btnMinus.onclick = function() {
-    minus(p.id);
-  };
-
-  const btnPlus = document.createElement('button');
-  btnPlus.innerText = "+1";
-  btnPlus.onclick = function() {
-    plus(p.id);
-  };
-
-  const btnSync = document.createElement('button');
-  btnSync.innerText = "Sync warehouse";
-  btnSync.onclick = function() {
-    updateStock(p.id);
-  };
-
-  div.appendChild(title);
-  div.appendChild(desc);
-  div.appendChild(price);
-  div.appendChild(stock);
-  div.appendChild(btnMinus);
-  div.appendChild(btnPlus);
-
-  const br = document.createElement('br');
-  div.appendChild(br);
-  div.appendChild(document.createElement('br'));
-
-  div.appendChild(btnSync);
-
-  list.appendChild(div);
-}
-}
+    list.appendChild(div);
+}}
 
 async function plus(id) {
   const res = await fetch('/products');
