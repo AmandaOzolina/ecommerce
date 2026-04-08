@@ -110,21 +110,31 @@ async function load() {
 async function plus(id) {
   const res = await fetch('/products');
   const data = await res.json();
-
   const p = data.find(x => x.id == id);
   p.stock++;
 
-  await save(data);
+  await fetch('/update-local/' + id, {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ stock: p.stock })
+  });
+
+  load();
 }
 
 async function minus(id) {
   const res = await fetch('/products');
   const data = await res.json();
-
   const p = data.find(x => x.id == id);
   p.stock--;
 
-  await save(data);
+  await fetch('/update-local/' + id, {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ stock: p.stock })
+  });
+
+  load();
 }
 
 async function save(data) {
