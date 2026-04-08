@@ -147,8 +147,8 @@ async function update(id) {
   }
   
   const name = prompt("Name:", p.name);
-  const price = prompt("Price:", p.price);
-  const stock = prompt("Stock:", p.stock);
+  const price = Number(prompt("Price:", p.price));
+  const stock = Number(prompt("Stock:", p.stock));
 
   await fetch('/products/' + id, {
     method: 'PUT',
