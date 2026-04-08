@@ -1,0 +1,68 @@
+<h1>Warehouse</h1>
+
+<button onclick="load()">Refresh</button>
+
+<h3>Add product</h3>
+<input id="name" placeholder="name">
+<input id="price" placeholder="price">
+<input id="stock" placeholder="stock">
+<button onclick="add()">Add</button>
+
+<ul id="list"></ul>
+
+<script>
+async function load() {
+  const res = await fetch('/products');
+  const data = await res.json();
+
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+
+  data.forEach(p => {
+    const li = document.createElement('li');
+
+    li.innerHTML = `
+      ${p.name} - ${p.price}€ - stock: ${p.stock}
+      <button onclick="update(${p.id})">Update</button>
+      <button onclick="del(${p.id})">Delete</button>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+async function add() {
+  await fetch('/products', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: Date.now(),
+      name: name.value,
+      price: Number(price.value),
+      stock: Number(stock.value),
+      description: ""
+    })
+  });
+
+  load();
+}
+
+async function update(id) {
+  const stock = prompt("New stock:");
+
+  await fetch('/products/' + id, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ stock: Number(stock) })
+  });
+
+  load();
+}
+
+async function del(id) {
+  await fetch('/products/' + id, { method: 'DELETE' });
+  load();
+}
+
+load();
+</script>
