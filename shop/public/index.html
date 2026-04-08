@@ -1,0 +1,40 @@
+<h1>Internetveikals</h1>
+
+<button onclick="importProducts()">Importēt</button>
+<button onclick="deleteAll()">Dzēst visus</button>
+
+<ul id="list"></ul>
+
+<script>
+async function load() {
+  const res = await fetch('/products');
+  const data = await res.json();
+
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+
+  data.forEach(p => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      ${p.name} (${p.stock})
+      <button onclick="updateStock(${p.id})">Update</button>
+    `;
+    list.appendChild(li);
+  });
+}
+
+async function importProducts() {
+  await fetch('/import-products');
+  load();
+}
+
+async function deleteAll() {
+  await fetch('/products', { method: 'DELETE' });
+  load();
+}
+
+async function updateStock(id) {
+  await fetch(`/update-stock/${id}`);
+  load();
+}
+</script>

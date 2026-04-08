@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "Telefons",
+    "description": "Labs telefons",
+    "price": 300,
+    "stock": 10
+  },
+  {
+    "id": 2,
+    "name": "Dators",
+    "description": "Jaudīgs dators",
+    "price": 1000,
+    "stock": 5
+  }
+]
