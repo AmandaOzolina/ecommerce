@@ -90,7 +90,7 @@ async function load() {
 
     div.innerHTML =
       "<h3>" + p.name + "</h3>" +
-      "<p>" + (p.description ? p.description : "") + "</p>" +
+      "<p>" + if (p.description) {desc = p.description;} else {desc = "";} + "</p>" +
       "<p class='price'>" + p.price + " €</p>" +
       "<div class='stock'>Stock: " + p.stock + "</div>" +
 
@@ -113,7 +113,7 @@ async function plus(id) {
       p = data[i];
   }
 }
-  p.stock++;
+  p.stock = p.stock + 1;
 
   await fetch('/update-local/' + id, {
     method: 'PUT',
@@ -133,7 +133,7 @@ async function minus(id) {
       p = data[i];
   }
 }
-  p.stock--;
+  p.stock = p.stock - 1;
 
   await fetch('/update-local/' + id, {
     method: 'PUT',
