@@ -181,35 +181,6 @@ async function minus(id) {
   load();
 }
 
-async function save(data) {
-  await fetch('/products', { method: 'DELETE' });
-
-  for (const p of data) {
-    await fetch('/add-local', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(p)
-    });
-  }
-
-  load();
-}
-
-async function send(id) {
-  const res = await fetch('/products');
-  const data = await res.json();
-
-  const product = data.find(p => p.id == id);
-
-  await fetch('https://ecommerce-2-7adp.onrender.com/products/' + id, {
-    method: 'PUT',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ stock: product.stock })
-  });
-
-  alert("Sent to warehouse");
-}
-
 async function importProducts() {await fetch('/import-products');load();}
 async function deleteAll() {await fetch('/products', { method: 'DELETE' });load();}
 async function updateStock(id) {await fetch(`/update-stock/${id}`);load();}
