@@ -6,13 +6,11 @@ app.use(express.json());
 
 const FILE = './products.json';
 
-// GET visi produkti
 app.get('/products', (req, res) => {
   const data = JSON.parse(fs.readFileSync(FILE));
   res.json(data);
 });
 
-// GET viena produkta stock
 app.get('/products/:id/stock', (req, res) => {
   const data = JSON.parse(fs.readFileSync(FILE));
   const product = data.find(p => p.id == req.params.id);
@@ -22,7 +20,6 @@ app.get('/products/:id/stock', (req, res) => {
   res.json({ stock: product.stock });
 });
 
-// POST jauns produkts
 app.post('/products', (req, res) => {
   const data = JSON.parse(fs.readFileSync(FILE));
   data.push(req.body);
