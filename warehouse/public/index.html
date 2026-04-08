@@ -1,14 +1,85 @@
-<h1>Warehouse</h1>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Warehouse</title>
 
-<!-- <button onclick="load()">Refresh</button> -->
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f6fa;
+  padding: 30px;
+}
 
-<h3>Add product</h3>
+h1 {
+  color: #2f3640;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background: #2f3640;
+  color: white;
+}
+
+button {
+  padding: 5px 10px;
+  border: none;
+  background: #40739e;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #273c75;
+}
+
+.add-box {
+  margin-bottom: 20px;
+  background: white;
+  padding: 15px;
+}
+
+input {
+  padding: 5px;
+  margin-right: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Warehouse Admin</h1>
+
+<div class="add-box">
 <input id="name" placeholder="name">
 <input id="price" placeholder="price">
 <input id="stock" placeholder="stock">
 <button onclick="add()">Add</button>
+</div>
 
-<ul id="list"></ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Price</th>
+<th>Stock</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="list"></tbody>
+</table>
 
 <script>
 async function load() {
@@ -19,15 +90,19 @@ async function load() {
   list.innerHTML = '';
 
   data.forEach(p => {
-    const li = document.createElement('li');
+    const tr = document.createElement('tr');
 
-    li.innerHTML = `
-      ${p.name} - ${p.price}€ - stock: ${p.stock}
-      <button onclick="update(${p.id})">Update</button>
-      <button onclick="del(${p.id})">Delete</button>
+    tr.innerHTML = `
+      <td>${p.name}</td>
+      <td>${p.price} €</td>
+      <td>${p.stock}</td>
+      <td>
+        <button onclick="update(${p.id})">Edit</button>
+        <button onclick="del(${p.id})">Delete</button>
+      </td>
     `;
 
-    list.appendChild(li);
+    list.appendChild(tr);
   });
 }
 
@@ -38,10 +113,10 @@ async function add() {
 
   await fetch('/products', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
       id: Date.now(),
-      name: name,
+      name,
       price: Number(price),
       stock: Number(stock),
       description: ""
@@ -62,12 +137,8 @@ async function update(id) {
 
   await fetch('/products/' + id, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name,
-      price: Number(price),
-      stock: Number(stock)
-    })
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ name, price, stock })
   });
 
   load();
@@ -80,3 +151,6 @@ async function del(id) {
 
 load();
 </script>
+
+</body>
+</html>
