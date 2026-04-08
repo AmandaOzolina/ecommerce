@@ -87,18 +87,20 @@ async function load() {
 
     const div = document.createElement('div');
     div.className = 'card';
-
+    let desc = "";
+    if (p.description) {
+      desc = p.description;
+    } else {
+      desc = "";
+    }
     div.innerHTML =
       "<h3>" + p.name + "</h3>" +
-      "<p>" + if (p.description) {desc = p.description;} else {desc = "";} + "</p>" +
+      "<p>" + desc + "</p>" +
       "<p class='price'>" + p.price + " €</p>" +
       "<div class='stock'>Stock: " + p.stock + "</div>" +
-
       "<button class='small-btn' onclick='minus(" + p.id + ")'>-1</button>" +
       "<button class='small-btn' onclick='plus(" + p.id + ")'>+1</button>" +
-
       "<br><br>" +
-
       "<button onclick='updateStock(" + p.id + ")'>Sync quantity</button>";
 
     list.appendChild(div);
@@ -113,7 +115,9 @@ async function plus(id) {
       p = data[i];
   }
 }
-  p.stock = p.stock + 1;
+  if (p != null) {
+    p.stock = p.stock + 1;
+  }
 
   await fetch('/update-local/' + id, {
     method: 'PUT',
@@ -133,7 +137,9 @@ async function minus(id) {
       p = data[i];
   }
 }
-  p.stock = p.stock - 1;
+  if (p != null) {
+    p.stock = p.stock - 1;
+  }
 
   await fetch('/update-local/' + id, {
     method: 'PUT',
