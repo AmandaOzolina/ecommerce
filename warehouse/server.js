@@ -38,8 +38,9 @@ app.put('/products/:id', (req, res) => {
   const index = data.findIndex(p => p.id == req.params.id);
 
   if (index === -1) return res.status(404).send('Not found');
-
-  data[index] = { ...data[index], ...req.body };
+  if (req.body.name !== undefined) data[index].name = req.body.name;
+  if (req.body.price !== undefined) data[index].price = req.body.price;
+  if (req.body.stock !== undefined) data[index].stock = req.body.stock;
 
   fs.writeFileSync(FILE, JSON.stringify(data, null, 2));
   res.send('Updated');
