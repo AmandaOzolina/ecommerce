@@ -115,16 +115,16 @@ async function plus(id) {
       p = data[i];
   }
 }
-  if (p != null) {
-    p.stock = p.stock + 1;
-  }
-
+if (p == null) {
+  alert("Product not found");
+  return;
+}
+  p.stock = p.stock + 1;
   await fetch('/update-local/' + id, {
-    method: 'PUT',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ stock: p.stock })
+  method: 'PUT',
+  headers: {'Content-Type':'application/json'},
+  body: JSON.stringify({ stock: p.stock })
   });
-
   load();
 }
 
