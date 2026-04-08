@@ -1,15 +1,35 @@
-<h1>Internetveikals</h1>
-
-<button onclick="importProducts()">Importēt</button>
-<button onclick="deleteAll()">Dzēst visus</button>
-
-<div id="list" class="grid"></div>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Internetveikals</title>
 
 <style>
 body {
   font-family: Arial;
   background: #f5f6fa;
   padding: 30px;
+}
+
+h1 {
+  color: #2f3640;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 8px 12px;
+  margin-right: 10px;
+  background: #40739e;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #273c75;
 }
 
 .grid {
@@ -29,16 +49,19 @@ body {
   font-weight: bold;
   color: #44bd32;
 }
-
-button {
-  padding: 5px 10px;
-  margin-top: 10px;
-  background: #40739e;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
 </style>
+</head>
+
+<body>
+
+<h1>Internetveikals</h1>
+
+<div class="controls">
+<button onclick="importProducts()">Importēt produktus</button>
+<button onclick="deleteAll()">Dzēst visus</button>
+</div>
+
+<div id="list" class="grid"></div>
 
 <script>
 async function load() {
@@ -63,3 +86,27 @@ async function load() {
     list.appendChild(div);
   });
 }
+
+async function importProducts() {
+  await fetch('/import-products');
+  alert("Imported!");
+  load();
+}
+
+async function deleteAll() {
+  await fetch('/products', { method: 'DELETE' });
+  alert("Deleted!");
+  load();
+}
+
+async function updateStock(id) {
+  await fetch(`/update-stock/${id}`);
+  alert("Updated!");
+  load();
+}
+
+load();
+</script>
+
+</body>
+</html>
