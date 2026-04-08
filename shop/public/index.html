@@ -82,29 +82,63 @@ async function load() {
   const list = document.getElementById('list');
   list.innerHTML = '';
 
-  data.forEach(p => {
-    const div = document.createElement('div');
-    div.className = 'card';
+  for (let i = 0; i < data.length; i++) {
+  const p = data[i];
 
-    div.innerHTML = `
-      <h3>${p.name}</h3>
-      <p>${p.description || ""}</p>
-      <p class="price">${p.price} €</p>
+  const div = document.createElement('div');
+  div.className = 'card';
 
-      <div class="stock">
-        Stock: ${p.stock}
-      </div>
+  const title = document.createElement('h3');
+  title.innerText = p.name;
 
-      <button class="small-btn" onclick="minus(${p.id})">-1</button>
-      <button class="small-btn" onclick="plus(${p.id})">+1</button>
+  const desc = document.createElement('p');
+  if (p.description) {
+    desc.innerText = p.description;
+  } else {
+    desc.innerText = "";
+  }
 
-      <br><br>
+  const price = document.createElement('p');
+  price.className = 'price';
+  price.innerText = p.price + " €";
 
-      <button onclick="updateStock(${p.id})">Refresh this product</button>
-    `;
+  const stock = document.createElement('div');
+  stock.className = 'stock';
+  stock.innerText = "Stock: " + p.stock;
 
-    list.appendChild(div);
-  });
+  const btnMinus = document.createElement('button');
+  btnMinus.innerText = "-1";
+  btnMinus.onclick = function() {
+    minus(p.id);
+  };
+
+  const btnPlus = document.createElement('button');
+  btnPlus.innerText = "+1";
+  btnPlus.onclick = function() {
+    plus(p.id);
+  };
+
+  const btnSync = document.createElement('button');
+  btnSync.innerText = "Sync warehouse";
+  btnSync.onclick = function() {
+    updateStock(p.id);
+  };
+
+  div.appendChild(title);
+  div.appendChild(desc);
+  div.appendChild(price);
+  div.appendChild(stock);
+  div.appendChild(btnMinus);
+  div.appendChild(btnPlus);
+
+  const br = document.createElement('br');
+  div.appendChild(br);
+  div.appendChild(document.createElement('br'));
+
+  div.appendChild(btnSync);
+
+  list.appendChild(div);
+}
 }
 
 async function plus(id) {
