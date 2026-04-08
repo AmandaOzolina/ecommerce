@@ -3,7 +3,42 @@
 <button onclick="importProducts()">Importēt</button>
 <button onclick="deleteAll()">Dzēst visus</button>
 
-<ul id="list"></ul>
+<div id="list" class="grid"></div>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f5f6fa;
+  padding: 30px;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  width: 220px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.price {
+  font-weight: bold;
+  color: #44bd32;
+}
+
+button {
+  padding: 5px 10px;
+  margin-top: 10px;
+  background: #40739e;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+</style>
 
 <script>
 async function load() {
@@ -14,30 +49,17 @@ async function load() {
   list.innerHTML = '';
 
   data.forEach(p => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      ${p.name} - cena: ${p.price}€ - stock: ${p.stock}
-      <button onclick="updateStock(${p.id})">Update</button>
+    const div = document.createElement('div');
+    div.className = 'card';
+
+    div.innerHTML = `
+      <h3>${p.name}</h3>
+      <p>${p.description || ""}</p>
+      <p class="price">${p.price} €</p>
+      <p>Stock: ${p.stock}</p>
+      <button onclick="updateStock(${p.id})">Update stock</button>
     `;
-    list.appendChild(li);
+
+    list.appendChild(div);
   });
 }
-
-async function importProducts() {
-  await fetch('/import-products');
-  alert("Imported!");
-  load();
-}
-
-async function deleteAll() {
-  await fetch('/products', { method: 'DELETE' });
-  alert("Deleted!");
-  load();
-}
-
-async function updateStock(id) {
-  await fetch(`/update-stock/${id}`);
-  alert("Updated!");
-  load();
-}
-</script>
