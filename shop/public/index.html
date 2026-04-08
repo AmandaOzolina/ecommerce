@@ -144,7 +144,12 @@ async function load() {
 async function plus(id) {
   const res = await fetch('/products');
   const data = await res.json();
-  const p = data.find(x => x.id == id);
+  let p = null;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].id == id) {
+      p = data[i];
+  }
+}
   p.stock++;
 
   await fetch('/update-local/' + id, {
@@ -159,7 +164,12 @@ async function plus(id) {
 async function minus(id) {
   const res = await fetch('/products');
   const data = await res.json();
-  const p = data.find(x => x.id == id);
+  let p = null;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].id == id) {
+      p = data[i];
+  }
+}
   p.stock--;
 
   await fetch('/update-local/' + id, {
