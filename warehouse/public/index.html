@@ -92,18 +92,16 @@ async function load() {
     const p = data[i];
     const tr = document.createElement('tr');
 
-    tr.innerHTML = `
-      <td>${p.name}</td>
-      <td>${p.price} €</td>
-      <td>${p.stock}</td>
-      <td>
-        <button onclick="update(${p.id})">Edit</button>
-        <button onclick="del(${p.id})">Delete</button>
-      </td>
-    `;
-
+    tr.innerHTML = 
+      "<td>" + p.name + "</td>" +
+      "<td>" + p.price + " €</td>" +
+      "<td>" + p.stock + "</td>" +
+      "<td>" +
+      "<button onclick='update(" + p.id + ")'>Edit</button> " +
+      "<button onclick='del(" + p.id + ")'>Delete</button>" +
+      "</td>";
     list.appendChild(tr);
-  });
+  }
 }
 
 async function add() {
@@ -129,7 +127,11 @@ async function add() {
 async function update(id) {
   const res = await fetch('/products');
   const data = await res.json();
-  const p = data.find(x => x.id == id);
+  let p = null;
+  for (let i = 0; i < data.length; i++) {
+  if (data[i].id == id) {
+    p = data[i];
+  }}
 
   const name = prompt("Name:", p.name);
   const price = prompt("Price:", p.price);
@@ -138,8 +140,11 @@ async function update(id) {
   await fetch('/products/' + id, {
     method: 'PUT',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ name, price, stock })
-  });
+    body: JSON.stringify({
+      name: name,
+      price: price,
+      stock: stock
+});
 
   load();
 }
