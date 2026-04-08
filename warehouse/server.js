@@ -20,6 +20,10 @@ app.get('/products/:id/stock', (req, res) => {
   res.json({ stock: product.stock });
 });
 
+app.get('/', (req, res) => {
+  res.send('Warehouse working');
+});
+
 app.post('/products', (req, res) => {
   const data = JSON.parse(fs.readFileSync(FILE));
   data.push(req.body);
