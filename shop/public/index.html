@@ -16,7 +16,7 @@ async function load() {
   data.forEach(p => {
     const li = document.createElement('li');
     li.innerHTML = `
-      ${p.name} (${p.stock})
+      ${p.name} - cena: ${p.price}€ - stock: ${p.stock}
       <button onclick="updateStock(${p.id})">Update</button>
     `;
     list.appendChild(li);
@@ -25,16 +25,19 @@ async function load() {
 
 async function importProducts() {
   await fetch('/import-products');
+  alert("Imported!");
   load();
 }
 
 async function deleteAll() {
   await fetch('/products', { method: 'DELETE' });
+  alert("Deleted!");
   load();
 }
 
 async function updateStock(id) {
   await fetch(`/update-stock/${id}`);
+  alert("Updated!");
   load();
 }
 </script>
