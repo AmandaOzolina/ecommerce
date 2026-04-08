@@ -14,6 +14,20 @@ app.get('/products', (req, res) => {
   res.json(data);
 });
 
+app.put('/update-local/:id', (req, res) => {
+  const products = JSON.parse(fs.readFileSync(FILE));
+  const p = products.find(x => x.id == req.params.id);
+
+  if (!p) return res.status(404).send('Not found');
+
+  if (req.body.stock !== undefined) p.stock = req.body.stock;
+  if (req.body.price !== undefined) p.price = req.body.price;
+  if (req.body.name !== undefined) p.name = req.body.name;
+
+  fs.writeFileSync(FILE, JSON.stringify(products, null, 2));
+  res.send('Updated');
+});
+
 app.delete('/products', (req, res) => {
   fs.writeFileSync(FILE, '[]');
   res.send('Deleted');
