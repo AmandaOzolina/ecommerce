@@ -7,22 +7,18 @@ app.use(express.static('public'));
 
 const FILE = './products.json';
 
-// vēlāk nomainīsi uz Render URL
-const WAREHOUSE_URL = 'https://warehouse-url.onrender.com';
+const WAREHOUSE_URL = 'https://ecommerce-2-7adp.onrender.com';
 
-// GET veikala produkti
 app.get('/products', (req, res) => {
   const data = JSON.parse(fs.readFileSync(FILE));
   res.json(data);
 });
 
-// DELETE visi produkti
 app.delete('/products', (req, res) => {
   fs.writeFileSync(FILE, '[]');
   res.send('Deleted');
 });
 
-// Importēt no noliktavas
 app.get('/import-products', async (req, res) => {
   const response = await fetch(`${WAREHOUSE_URL}/products`);
   const data = await response.json();
@@ -31,7 +27,6 @@ app.get('/import-products', async (req, res) => {
   res.send('Imported');
 });
 
-// Update stock vienam produktam
 app.get('/update-stock/:id', async (req, res) => {
   const response = await fetch(`${WAREHOUSE_URL}/products/${req.params.id}/stock`);
   const stockData = await response.json();
